@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <img src="./assets/logo.png">
+    <h1 class="md-display-2">{{currUser}}</h1>
     <br>
     <md-card class="myclass">
       <md-card-header>
@@ -11,11 +12,11 @@
       <md-card-content>
         <md-field>
           <label>Username</label>
-          <md-input v-model="user"/>
+          <md-input v-model="newUser.username"/>
         </md-field>
         <md-field>
           <label>Email</label>
-          <md-input v-model="email"/>
+          <md-input v-model="newUser.email"/>
         </md-field>
       </md-card-content>
     </md-card>
@@ -31,16 +32,35 @@
 
   export default {
     name: 'App',
+    data() {
+      return {
+        newUser: {},
+        users: [],
+        currUser: 'Guest'
+      }
+    },
     components: {
       // test, users
     },
     methods: {
       login: function () {
-        alert('logging in');
+        for (let i = 0; i < this.users.length; i++) {
+          if (this.newUser.username === this.users[i].username && this.newUser.email === this.users[i].email) {
+            this.currUser = 'Welcome ' + this.users[i].name;
+            return true;
+          }
+        }
+        return false;
       },
       signup: function () {
-        alert('signing up');
       }
+    },
+    created: function () {
+      this.$http.get('https://jsonplaceholder.typicode.com/users')
+        .then(function (response) {
+          this.users = response.data;
+          console.log(response.data);
+        });
     }
   }
 </script>
@@ -53,18 +73,18 @@
     margin-right: 30px;
   }
 
-  .md-primary {
-    background-color: #448aff;
-  }
+  /*.md-primary {*/
+  /*background-color: #448aff;*/
+  /*}*/
 
-  .md-accent {
-    background-color: #ff5252;
-  }
-  .myclass{
-    background-color: #42b883;
-    /*background-color: #35495e;*/
-  }
-  .myclass{
+  /*.md-accent {*/
+  /*background-color: #ff5252;*/
+  /*}*/
+  /*.myclass{*/
+  /*background-color: #42b883;*/
+  /*!*background-color: #35495e;*!*/
+  /*}*/
+  .myclass {
     margin-right: 35%;
     margin-left: 35%;
   }
